@@ -35,6 +35,7 @@ public class Game extends JFrame implements MouseListener{
 	private int state;
 	private int nowcamp;
 	private int stateX, stateY;
+	private int lastStep;/////
 	//my code
 	
 	public static void main(String[] args) {
@@ -94,6 +95,7 @@ public class Game extends JFrame implements MouseListener{
 		//my code ><	
 		
 		chessBoard = new Chess[8][8];
+	//	chess[][] = new King("wKing",,,0);
 		state = 0;//狀態初始化
 		nowcamp = 0;//陣營初始化
 		stateX = -1;
