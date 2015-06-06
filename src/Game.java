@@ -1,7 +1,6 @@
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.Image;
-import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -13,6 +12,7 @@ import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 
+import java.awt.Graphics;//
 import java.awt.Color;
 
 import javax.swing.border.BevelBorder;
@@ -23,7 +23,6 @@ import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.border.CompoundBorder;
 
-
 public class Game extends JFrame implements MouseListener{
 
 	private JPanel contentPane;
@@ -32,6 +31,11 @@ public class Game extends JFrame implements MouseListener{
 	private JTextPane textPane;
 	private String debugMessage;
 	private Chess[][] chessBoard;
+	//my code
+	private int state;
+	private int nowcamp;
+	private int stateX, stateY;
+	//my code
 	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -87,6 +91,14 @@ public class Game extends JFrame implements MouseListener{
 		panel_1.setBounds(620, 391, 229, 230);
 		contentPane.add(panel_1);
 		
+		//my code ><	
+		
+		chessBoard = new Chess[8][8];
+		state = 0;//狀態初始化
+		nowcamp = 0;//陣營初始化
+		stateX = -1;
+		stateY = -1;
+		//my code ><
 	}
 	
 	private Point determineGrid(int x,int y){ 
@@ -103,10 +115,46 @@ public class Game extends JFrame implements MouseListener{
 	public void mouseClicked(MouseEvent e) {
 		
 		Point p = determineGrid(e.getX(),e.getY());
+		//my code:)
+		if(state == 0){
+			boolean[][] boardAvailable;
+			if(p.x <=7 && p.y <= 7 && chessBoard[p.x][p.y] != null && chessBoard[p.x][p.y].camp() == nowcamp){
+				boardAvailable = chessBoard[p.x][p.y].getReachableGrid(chessBoard);
+				for(int i = 0; i < 8; i ++){
+					for(int j = 0; j < 8; j ++){
+						if(boardAvailable[i][j] = true){
+							//加辨識符號到圖上
+							
+						}
+					}
+				}
+				stateX = p.x;
+				stateY = p.y;
+				state = 1;//進入下一個狀態
+			}
+
+		}else if(state == 1){
+			if(chessBoard[stateX][stateY].isReachable(chessBoard,p.x,p.y)){
+				if(chessBoard[stateX][stateY].isCritical()){//吃國王
+					// gameover
+					state = 2;//結束狀態
+				}
+				chessBoard[stateX][stateY] = chessBoard[p.x][p.y];
+				chessBoard[p.x][p.y] = null;//
+				state = 0;//回到上一個狀態
+				
+			}else if(stateX == p.x && stateY == p.y){
+				state = 0;//回到上一個狀態
+				
+			}
+		}
+		//my code
+		
 		//DEBUG
-		debugMessage = new String("Clicked. X is: " + e.getX() + " Y is: " + e.getY() + ". Grid is :[" + p.y + "," + p.x +"]");
+		debugMessage = new String("Clicked. X is: " + e.getX() + " Y is: " + e.getY() + ". Grid is :[" + p.x + "," + p.y +"]");
 		DebugText.setText(debugMessage);
 		//DEBUG
+		
 	}
 
 	public void mouseEntered(MouseEvent e) {
